@@ -296,7 +296,7 @@ likert.bar.plot <- function(l,
 			if(center %% 1 == 0) { # Midpoint is a level (i.e. there are an odd number of levels)
 				center.label <- names(l$results)[center+1]
 			}
-			lpercentpos <- ddply(results[results$value > 0,], .(Item), transform, 
+			lpercentpos <- ddply(results[results$value > 0,], .(Group, Item), transform, 
 								 pos = cumsum(value) - 0.5*value)
 			p <- p + geom_text(data=lpercentpos[lpercentpos$variable != center.label,], 
 							   aes(x=Item, y=pos, 
@@ -306,11 +306,11 @@ likert.bar.plot <- function(l,
 			if(nrow(lpercentneg) > 0) {
 				lpercentneg <- lpercentneg[nrow(lpercentneg):1,]
 				lpercentneg$value <- abs(lpercentneg$value)
-				lpercentneg <- ddply(lpercentneg, .(Item), transform, 
+				lpercentneg <- ddply(lpercentneg, .(Group, Item), transform, 
 									 pos = cumsum(value) - 0.5*value)	
 				lpercentneg$pos <- lpercentneg$pos * -1
 				p <- p + geom_text(data=lpercentneg[lpercentneg$variable != center.label,], 
-								   aes(x=Item, y=pos, 
+								   aes(x=Group, y=pos, 
 							label=paste0(prettyNum(abs(value), digits=digits, drop0trailing=drop0trailing, zero.print=zero.print), '%')),
 							size=text.size, color=text.color)
 			}
